@@ -7,7 +7,8 @@ var mime = require('mime');
 
 var server = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url, true);
-  const { pathname, query } = parsedUrl;
+  const pathname = parsedUrl.pathname;
+  const query  = parsedUrl.query;
 
   switch (req.method) {
     case 'GET': {
