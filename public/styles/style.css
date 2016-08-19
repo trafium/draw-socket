@@ -1,0 +1,10 @@
+body {
+  background-color: #eee;
+  text-align: center;
+}
+
+#canvas {
+  background-color: #fff;
+  margin: 0 auto;
+  box-shadow: 1px 1px 8px rgba(0,0,0,0.3);
+}
