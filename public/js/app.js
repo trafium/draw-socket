@@ -1,11 +1,22 @@
 $(function() {
+  function drawAsync(lines, stepNumber) {
+    function draw() {
+      var step = lines.splice(0, stepNumber);
+      step.forEach((line) => {
+        drawLine(context, line);
+      });
+      if (lines.length) {
+        setTimeout(draw, 1);
+      }
+    }
+    draw();
+  }
+
   function initSocket() {
     socket = io.connect();
 
     socket.on('getCurrentDrawing', function(lines) {
-      lines.forEach((line) => {
-        drawLine(context, line);
-      });
+      drawAsync(lines, 100);
     });
 
     socket.on('getLine', function(line) {
