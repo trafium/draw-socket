@@ -5,14 +5,13 @@ $(function() {
 
     socket.on('getCurrentImage', function(url) {
       // drawAsync(context, lines, 100);
-      console.log(url);
       var image = new Image();
       image.src = url;
       context.drawImage(image, 0, 0);
     });
 
     socket.on('getLine', function(line) {
-      console.log(line.a, line.b);
+      console.log('Got line');
       drawLine(context, line);
     });
   }
@@ -23,6 +22,7 @@ $(function() {
   var socket = true;
 
   context.strokeStyle = "black";
+  context.lineWidth = 2;
 
   var line = {};
 
@@ -39,6 +39,8 @@ $(function() {
       coords = getMouseCoords($canvas.get(0), event);
 
       line.b = coords;
+      line.color = context.strokeStyle;
+      line.width = context.lineWidth;
       drawLine(context, line);
       socket.emit('postLine', line);
       line.a = coords;
@@ -49,6 +51,37 @@ $(function() {
     dragging = false;
 
     socket.emit('postCurrentImage', $canvas.get(0).toDataURL())
+  });
+
+  $(document).on('keydown', function(event) {
+    console.log(event.keyCode);
+    switch(event.keyCode) {
+      case 49: {
+        context.strokeStyle = "#000000";
+        context.lineWidth = 2;
+        break;
+      }
+      case 50: {
+        context.strokeStyle = "#ff0000";
+        context.lineWidth = 2;
+        break;
+      }
+      case 51: {
+        context.strokeStyle = "#00ff00";
+        context.lineWidth = 2;
+        break;
+      }
+      case 52: {
+        context.strokeStyle = "#0000ff";
+        context.lineWidth = 2;
+        break;
+      }
+      case 53: {
+        context.strokeStyle = "#ffffff";
+        context.lineWidth = 10;
+        break;
+      }
+    }
   });
 
   initSocket();
@@ -64,11 +97,15 @@ function getMouseCoords(canvas, event) {
 }
 
 function drawLine(context, line) {
+  context.save();
+  context.strokeStyle = line.color;
+  context.lineWidth = line.width;
   context.beginPath();
   context.moveTo(line.a.x, line.a.y);
 
   context.lineTo(line.b.x, line.b.y);
   context.stroke();
+  context.restore();
 }
 
 function drawAsync(context, lines, stepNumber) {
