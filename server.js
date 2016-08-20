@@ -33,7 +33,8 @@ function serveStatic(pathname, res) {
       console.log('File ' + pathname + ' does not exist.');
       return send404(res);
     } else {
-      res.writeHead(200, mime.lookup(pathname));
+      var type = mime.lookup(pathname);
+      res.writeHead(200, { 'Content-Type': type });
       fs.createReadStream('./public' + pathname).pipe(res);
     }
   });
