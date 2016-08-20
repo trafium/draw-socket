@@ -1,23 +1,82 @@
 var uicontext;
 var context;
+var socket;
 
-$(function() {
+function setStrokeStyle(color, width) {
+  context.strokeStyle = color;
+  context.lineWidth = width;
+  drawCursor(null, context.lineWidth/2+1);
+}
 
-  function initSocket() {
-    socket = io.connect();
+function getMouseCoords(canvas, event) {
+  var rectangle = canvas.getBoundingClientRect();
+  return {
+    x: event.clientX - rectangle.left,
+    y: event.clientY - rectangle.top
+  };
+}
 
-    socket.on('getCurrentImage', function(url) {
-      // drawAsync(context, lines, 100);
-      var image = new Image();
-      image.src = url;
-      context.drawImage(image, 0, 0);
-    });
+function drawLine(line) {
+  context.save();
+  context.strokeStyle = line.color;
+  context.lineWidth = line.width;
+  context.beginPath();
+  context.moveTo(line.a.x, line.a.y);
 
-    socket.on('getLine', function(line) {
-      console.log('Got line');
+  context.lineTo(line.b.x, line.b.y);
+  context.stroke();
+  context.restore();
+}
+
+var drawCursor = (function() {
+  var savedCoords;
+  return function (coords, radius) {
+    savedCoords = coords || savedCoords;
+    uicontext.clearRect(0, 0, uicontext.canvas.width, uicontext.canvas.height);
+    uicontext.beginPath();
+    uicontext.arc(savedCoords.x, savedCoords.y, radius, 0, 2*Math.PI);
+    uicontext.stroke();
+  }
+})();
+
+function drawAsync(lines, stepNumber) {
+  function draw() {
+    var step = lines.splice(0, stepNumber);
+    step.forEach((line) => {
       drawLine(line);
     });
+    if (lines.length) {
+      setTimeout(draw, 1);
+    }
   }
+  draw();
+}
+
+function clear() {
+  context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+}
+
+function initSocket() {
+  socket = io.connect();
+
+  socket.on('getCurrentImage', function(url) {
+    // drawAsync(context, lines, 100);
+    var image = new Image();
+    image.src = url;
+    context.drawImage(image, 0, 0);
+  });
+
+  socket.on('getLine', function(line) {
+    console.log('Got line');
+    drawLine(line);
+  });
+
+  socket.on('clear', function() {
+    clear();
+  });
+}
+
+$(function() {
 
   var $canvas = $('#canvas');
   var $ui = $('#ui');
@@ -26,7 +85,6 @@ $(function() {
   uicontext = $ui.get(0).getContext('2d');
 
   var dragging = false;
-  var socket = true;
 
   var image = '';
 
@@ -103,53 +161,3 @@ $(function() {
   initSocket();
   
 });
-
-function setStrokeStyle(color, width) {
-  context.strokeStyle = color;
-  context.lineWidth = width;
-  drawCursor(null, context.lineWidth/2+1);
-}
-
-function getMouseCoords(canvas, event) {
-  var rectangle = canvas.getBoundingClientRect();
-  return {
-    x: event.clientX - rectangle.left,
-    y: event.clientY - rectangle.top
-  };
-}
-
-function drawLine(line) {
-  context.save();
-  context.strokeStyle = line.color;
-  context.lineWidth = line.width;
-  context.beginPath();
-  context.moveTo(line.a.x, line.a.y);
-
-  context.lineTo(line.b.x, line.b.y);
-  context.stroke();
-  context.restore();
-}
-
-var drawCursor = (function() {
-  var savedCoords;
-  return function (coords, radius) {
-    savedCoords = coords || savedCoords;
-    uicontext.clearRect(0, 0, uicontext.canvas.width, uicontext.canvas.height);
-    uicontext.beginPath();
-    uicontext.arc(savedCoords.x, savedCoords.y, radius, 0, 2*Math.PI);
-    uicontext.stroke();
-  }
-})();
-
-function drawAsync(lines, stepNumber) {
-  function draw() {
-    var step = lines.splice(0, stepNumber);
-    step.forEach((line) => {
-      drawLine(line);
-    });
-    if (lines.length) {
-      setTimeout(draw, 1);
-    }
-  }
-  draw();
-}
