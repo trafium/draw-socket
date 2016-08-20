@@ -41,9 +41,9 @@ $(function() {
 
     line.a = coords;
   });
-  $canvas.on('mousemove', function(event) {
+  $(document).on('mousemove', function(event) {
     if (dragging) {
-      coords = getMouseCoords(this, event);
+      coords = getMouseCoords($canvas.get(0), event);
 
       line.b = coords;
       drawLine(context, line);
