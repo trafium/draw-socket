@@ -1,22 +1,14 @@
 $(function() {
-  function drawAsync(lines, stepNumber) {
-    function draw() {
-      var step = lines.splice(0, stepNumber);
-      step.forEach((line) => {
-        drawLine(context, line);
-      });
-      if (lines.length) {
-        setTimeout(draw, 1);
-      }
-    }
-    draw();
-  }
 
   function initSocket() {
     socket = io.connect();
 
-    socket.on('getCurrentDrawing', function(lines) {
-      drawAsync(lines, 100);
+    socket.on('getCurrentImage', function(url) {
+      // drawAsync(context, lines, 100);
+      console.log(url);
+      var image = new Image();
+      image.src = url;
+      context.drawImage(image, 0, 0);
     });
 
     socket.on('getLine', function(line) {
@@ -41,6 +33,7 @@ $(function() {
 
     line.a = coords;
   });
+
   $(document).on('mousemove', function(event) {
     if (dragging) {
       coords = getMouseCoords($canvas.get(0), event);
@@ -51,12 +44,14 @@ $(function() {
       line.a = coords;
     }
   });
+
   $(document).on('mouseup', function(event) {
     dragging = false;
+
+    socket.emit('postCurrentImage', $canvas.get(0).toDataURL())
   });
 
   initSocket();
-
   
 });
 
@@ -74,4 +69,17 @@ function drawLine(context, line) {
 
   context.lineTo(line.b.x, line.b.y);
   context.stroke();
+}
+
+function drawAsync(context, lines, stepNumber) {
+  function draw() {
+    var step = lines.splice(0, stepNumber);
+    step.forEach((line) => {
+      drawLine(context, line);
+    });
+    if (lines.length) {
+      setTimeout(draw, 1);
+    }
+  }
+  draw();
 }
