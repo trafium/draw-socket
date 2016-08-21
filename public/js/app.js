@@ -97,13 +97,13 @@ $(function() {
   var line = {};
 
   $ui.on('mousedown', function(event) {
-    $canvas.trigger('mousedown');
+    $canvas.trigger('mousedown', event);
   });
 
-  $canvas.on('mousedown', function(event) {
+  $canvas.on('mousedown', function(event, bubbledEvent) {
     dragging = true;
 
-    coords = getMouseCoords(this, event);
+    coords = getMouseCoords(this, bubbledEvent);
 
     line.a = coords;
   });
