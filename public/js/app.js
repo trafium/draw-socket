@@ -33,6 +33,7 @@ var drawCursor = (function() {
   return function (coords, radius) {
     savedCoords = coords || savedCoords;
     uicontext.clearRect(0, 0, uicontext.canvas.width, uicontext.canvas.height);
+    uicontext.strokeStyle = 'rgba(0, 0, 0, 0.3)';
     uicontext.beginPath();
     uicontext.arc(savedCoords.x, savedCoords.y, radius, 0, 2*Math.PI);
     uicontext.stroke();
@@ -118,7 +119,7 @@ $(function() {
       line.a = coords;
 
     }
-    drawCursor(coords, context.lineWidth/2+2);
+    drawCursor(coords, context.lineWidth/2+1);
 
   });
 
