@@ -17,6 +17,7 @@ function getMouseCoords(canvas, event) {
 }
 
 function drawLine(line) {
+  console.log(line);
   context.save();
   context.strokeStyle = line.color;
   context.lineWidth = line.width;
