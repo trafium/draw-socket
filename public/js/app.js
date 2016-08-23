@@ -1,110 +1,44 @@
-var uicontext;
+var paletteContext
+var uiContext;
 var context;
 var socket;
 
-function setStrokeStyle(color, width) {
-  context.strokeStyle = color;
-  context.lineWidth = width;
-  drawCursor(null, context.lineWidth/2+1);
-}
-
-function getMouseCoords(canvas, event) {
-  var rectangle = canvas.getBoundingClientRect();
-  return {
-    x: event.clientX - rectangle.left,
-    y: event.clientY - rectangle.top
-  };
-}
-
-function drawLine(line) {
-  console.log(line);
-  context.save();
-  context.strokeStyle = line.color;
-  context.lineWidth = line.width;
-  context.beginPath();
-  context.moveTo(line.a.x, line.a.y);
-
-  context.lineTo(line.b.x, line.b.y);
-  context.stroke();
-  context.restore();
-}
-
-var drawCursor = (function() {
-  var savedCoords;
-  return function (coords, radius) {
-    savedCoords = coords || savedCoords;
-    uicontext.clearRect(0, 0, uicontext.canvas.width, uicontext.canvas.height);
-    uicontext.strokeStyle = 'rgba(0, 0, 0, 0.3)';
-    uicontext.beginPath();
-    uicontext.arc(savedCoords.x, savedCoords.y, radius, 0, 2*Math.PI);
-    uicontext.stroke();
-  }
-})();
-
-function drawAsync(lines, stepNumber) {
-  function draw() {
-    var step = lines.splice(0, stepNumber);
-    step.forEach((line) => {
-      drawLine(line);
-    });
-    if (lines.length) {
-      setTimeout(draw, 1);
-    }
-  }
-  draw();
-}
-
-function clear() {
-  context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-}
-
-function initSocket() {
-  socket = io.connect();
-
-  socket.on('getCurrentImage', function(url) {
-    // drawAsync(context, lines, 100);
-    var image = new Image();
-    image.src = url;
-    context.drawImage(image, 0, 0);
-  });
-
-  socket.on('getLine', function(line) {
-    console.log('Got line');
-    drawLine(line);
-  });
-
-  socket.on('clear', function() {
-    clear();
-  });
-}
+var $canvas;
+var $ui;
+var $toolbar;
+var $palette;
+var $currentColor;
+var $brushSizes;
 
 $(function() {
 
-  var $canvas = $('#canvas');
-  var $ui = $('#ui');
-
-  context = $canvas.get(0).getContext('2d');
-  uicontext = $ui.get(0).getContext('2d');
-
-  var dragging = false;
+  $canvas = $('#canvas');
+  $ui = $('#ui');
+  $toolbar = $('#toolbar');
+  $palette = $('#color-palette');
+  $currentColor = $('#current-color');
+  $brushSizes = $('.brush-size');
 
   var image = '';
+  var line = {};
+  
+  var dragging = false;
+  var paletteDragging = false;
+  
+  context = $canvas.get(0).getContext('2d');
+  uiContext = $ui.get(0).getContext('2d');
+  paletteContext = $palette.get(0).getContext('2d');
 
+  // DEFAULT STROKE STYLES
   context.strokeStyle = "black";
   context.lineWidth = 2;
   context.lineCap = "round";
 
-  var line = {};
-
+  // DRAWING EVENTS
   $ui.on('mousedown', function(event) {
-    $canvas.trigger('mousedown', event);
-  });
-
-  $canvas.on('mousedown', function(event, bubbledEvent) {
+    event.preventDefault();
     dragging = true;
-
-    coords = getMouseCoords(this, bubbledEvent);
-
+    coords = getMouseCoords(this, event);
     line.a = coords;
   });
 
@@ -125,41 +59,37 @@ $(function() {
   });
 
   $(document).on('mouseup', function(event) {
+    if (dragging) {
+      socket.emit('postCurrentImage', $canvas.get(0).toDataURL());
+    }
+    clearSelection();
     dragging = false;
-
-    socket.emit('postCurrentImage', $canvas.get(0).toDataURL());
   });
 
-  $(document).on('keydown', function(event) {
+  // BRUSH SIZE SELECTION
+  $brushSizes.on('click', function(event) {
+    $brushSizes.removeClass('active');
+    $(this).addClass('active');
+    setStrokeStyle(null, $(this).attr('data-size'));
+  });
 
-    switch(event.keyCode) {
-      case 49: {
-        setStrokeStyle("#000000", 2);
-        break;
-      }
-      case 50: {
-        setStrokeStyle("#ff0000", 2);
-        break;
-      }
-      case 51: {
-        setStrokeStyle("#00ff00", 2);
-        break;
-      }
-      case 52: {
-        setStrokeStyle("#0000ff", 2);
-        break;
-      }
-      case 53: {
-        setStrokeStyle("#ffffff", 10);
-        break;
-      }
-      default: {
+  // COLOR SELECTION
+  $palette.on('mousedown', function(event) {
+    paletteDragging = true;
+    setColor(this, event);
+  });
 
-        break;
-      }
+  $palette.on('mousemove', function(event) {
+    if (paletteDragging) {
+      setColor(this, event);
     }
   });
 
+  $(document).on('mouseup', function(event) {
+    paletteDragging = false;
+  });
+
+  initColorPalette();
   initSocket();
   
 });

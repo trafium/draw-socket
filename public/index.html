@@ -6,13 +6,27 @@
   <meta charset="utf-8">
   <link rel="stylesheet" type="text/css" href="styles/style.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+  <script src="js/util.js"></script>
+  <script src="js/draw_util.js"></script>
+  <script src="js/socket.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
   <script src="js/app.js"></script>
 </head>
 <body>
   <div id="container">
     <canvas id="canvas" width="800" height="600"></canvas>
     <canvas id="ui" width="800" height="600"></canvas>
+    <div id="toolbar">
+      <div class="brush-size active" data-size="2"><div class="brush"></div></div>
+      <div class="brush-size" data-size="4"><div class="brush"></div></div>
+      <div class="brush-size" data-size="8"><div class="brush"></div></div>
+      <div class="brush-size" data-size="14"><div class="brush"></div></div>
+      <div class="brush-size" data-size="24"><div class="brush"></div></div>
+      <div id="color-container">
+        <div id="current-color"></div>
+        <canvas id="color-palette" width="32" height="270"></canvas>
+      </div>
+    </div>
   </div>
 </body>
 </html>

@@ -5,7 +5,7 @@ body {
 #container {
   display: block;
   margin: 0 auto;
-  width: 800px;
+  width: 852px;
   height: 600px;
   position: relative;
 }
@@ -16,16 +16,97 @@ body {
 }
 
 #canvas {
-  background-color: #fff;
-  margin: 0 auto;
   box-shadow: 1px 1px 8px rgba(0,0,0,0.3);
+  background-color: #fff;
+  float: left;
 }
 
-#canvas, #ui {
+#ui {
   position: absolute;
   top: 0;
+  left: 0;
 }
 
 #ui:hover {
   cursor: none;
+}
+
+
+#toolbar {
+  position: relative;
+  margin-left: 4px;
+  float: left;
+  height: 600px;
+  background-color: #ece4ce;
+  box-shadow: 1px 1px 8px rgba(0,0,0,0.3);
+}
+
+#color-container {
+  position: absolute;
+  width: 100%;
+  bottom: 4px;
+}
+
+#current-color {
+  width: 32px;
+  height: 32px;
+  margin: 0 auto;
+  background-color: black;
+  border-radius: 4px;
+  box-shadow: 1px 1px 6px rgba(0,0,0,0.3);
+}
+
+#color-palette {
+  display: block;
+  margin: 4px auto 0;
+  border-radius: 4px;
+  box-shadow: 1px 1px 6px rgba(0,0,0,0.3);
+}
+
+.brush-size {
+  width: 40px;
+  height: 40px;
+  margin: 4px;
+}
+
+.brush-size .brush {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0 auto;
+  background-color: #000;
+  border-radius: 50%;
+}
+
+.brush-size.active {
+  border-radius: 4px;
+  background-color: #c3b391;
+  box-shadow: 1px 1px 8px rgba(0,0,0,0.2) inset;
+}
+
+.brush-size:hover:not(.active) {
+  border-radius: 4px;
+  background-color: #e6d5af;
+  box-shadow: 1px 1px 8px rgba(0,0,0,0.1) inset;
+}
+
+.brush-size[data-size="2"] .brush {
+  width: 2px;
+  height: 2px;
+}
+.brush-size[data-size="4"] .brush {
+  width: 4px;
+  height: 4px;
+}
+.brush-size[data-size="8"] .brush {
+  width: 6px;
+  height: 6px;
+}
+.brush-size[data-size="14"] .brush {
+  width: 10px;
+  height: 10px;
+}
+.brush-size[data-size="24"] .brush {
+  width: 16px;
+  height: 16px;
 }
