@@ -49,6 +49,7 @@ $(function() {
         return;
       }
     }  else {
+      event.preventDefault();
       coords = getMouseCoords($canvas.get(0), event);
     }
     if (dragging) {
