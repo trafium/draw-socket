@@ -38,25 +38,20 @@ $(function() {
   $ui.on('mousedown touchstart', function(event) {
     event.preventDefault();
     dragging = true;
-    if (event.touches) {
-      coords = getTouchCoords(this, event);
-    } else {
-      coords = getMouseCoords(this, event);
-    }
+    coords = event.touches ? getTouchCoords(this, event) : getMouseCoords(this, event);
     line.a = coords;
   });
 
   $(document).on('mousemove touchmove', function(event) {
-    coords = getMouseCoords($canvas.get(0), event);
+    coords = event.touches ? 
+      getTouchCoords($canvas.get(0), event) : getMouseCoords($canvas.get(0), event);
     if (dragging) {
-
       line.b = coords;
       line.color = context.strokeStyle;
       line.width = context.lineWidth;
       drawLine(line);
       socket.emit('postLine', line);
       line.a = coords;
-
     }
     drawCursor(coords, context.lineWidth/2+1);
 

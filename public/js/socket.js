@@ -9,7 +9,7 @@ function initSocket() {
   });
 
   socket.on('getLine', function(line) {
-    console.log(line);
+    // console.log(line);
     drawLine(line);
   });
 
