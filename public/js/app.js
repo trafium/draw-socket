@@ -35,14 +35,14 @@ $(function() {
   context.lineCap = "round";
 
   // DRAWING EVENTS
-  $ui.on('mousedown', function(event) {
+  $ui.on('mousedown touchstart', function(event) {
     event.preventDefault();
     dragging = true;
     coords = getMouseCoords(this, event);
     line.a = coords;
   });
 
-  $(document).on('mousemove', function(event) {
+  $(document).on('mousemove touchmove', function(event) {
     coords = getMouseCoords($canvas.get(0), event);
     if (dragging) {
 
@@ -58,7 +58,7 @@ $(function() {
 
   });
 
-  $(document).on('mouseup', function(event) {
+  $(document).on('mouseup touchend', function(event) {
     if (dragging) {
       socket.emit('postCurrentImage', $canvas.get(0).toDataURL());
     }
@@ -74,18 +74,18 @@ $(function() {
   });
 
   // COLOR SELECTION
-  $palette.on('mousedown', function(event) {
+  $palette.on('mousedown touchstart', function(event) {
     paletteDragging = true;
     setColor(this, event);
   });
 
-  $palette.on('mousemove', function(event) {
+  $palette.on('mousemove touchmove', function(event) {
     if (paletteDragging) {
       setColor(this, event);
     }
   });
 
-  $(document).on('mouseup', function(event) {
+  $(document).on('mouseup touchend', function(event) {
     paletteDragging = false;
   });
 
