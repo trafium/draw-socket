@@ -13,7 +13,7 @@ function clearSelection() {
 function getMouseCoords(canvas, event) {
   var rectangle = canvas.getBoundingClientRect();
   return {
-    x: event.clientX - rectangle.left,
-    y: event.clientY - rectangle.top
+    x: event.pageX - canvas.position().left,
+    y: event.pageY - canvas.position().top
   };
 }
