@@ -34,15 +34,20 @@ $(function() {
   context.lineWidth = 2;
   context.lineCap = "round";
 
+  // UI TOUCH EVENTS
+  $ui.on('touchstart', function(event) {
+    coords = getTouchCoords(this, event);
+  });
+
   // UI MOUSE EVENTS
-  $ui.on('mousedown touchstart', function(event) {
+  $ui.on('mousedown', function(event) {
     event.preventDefault();
     dragging = true;
-    coords = event.touches ? getTouchCoords(this, event) : getMouseCoords(this, event);
+    coords = getMouseCoords(this, event);
     line.a = coords;
   });
 
-  $(document).on('mousemove touchmove', function(event) {
+  $(document).on('mousemove', function(event) {
     coords = event.touches ? 
       getTouchCoords($canvas.get(0), event) : getMouseCoords($canvas.get(0), event);
     if (dragging) {
@@ -57,7 +62,7 @@ $(function() {
 
   });
 
-  $(document).on('mouseup touchend', function(event) {
+  $(document).on('mouseup', function(event) {
     if (dragging) {
       socket.emit('postCurrentImage', $canvas.get(0).toDataURL());
     }
