@@ -37,13 +37,20 @@ $(function() {
   // UI MOUSE EVENTS
   $ui.on('mousedown touchstart', function(event) {
     dragging = true;
-    coords = event.touches ? getTouchCoords(this, event) : getMouseCoords(this, event);
+    var coords = event.touches ? getTouchCoords(this, event) : getMouseCoords(this, event);
     line.a = coords;
   });
 
   $(document).on('mousemove touchmove', function(event) {
-    coords = event.touches ? 
-      getTouchCoords($canvas.get(0), event) : getMouseCoords($canvas.get(0), event);
+    var coords;
+    if (event.touches) {
+      coords = getTouchCoords($canvas.get(0), event);
+      if (event.touches.length > 1) {
+        return;
+      }
+    }  else {
+      coords = getMouseCoords($canvas.get(0), event);
+    }
     if (dragging) {
       line.b = coords;
       line.color = context.strokeStyle;
