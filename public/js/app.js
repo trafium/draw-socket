@@ -34,11 +34,15 @@ $(function() {
   context.lineWidth = 2;
   context.lineCap = "round";
 
-  // DRAWING EVENTS
+  // UI MOUSE EVENTS
   $ui.on('mousedown touchstart', function(event) {
     event.preventDefault();
     dragging = true;
-    coords = getMouseCoords(this, event);
+    if (event.touches) {
+      coords = getTouchCoords(this, event);
+    } else {
+      coords = getMouseCoords(this, event);
+    }
     line.a = coords;
   });
 
