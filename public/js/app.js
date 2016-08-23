@@ -36,7 +36,6 @@ $(function() {
 
   // UI MOUSE EVENTS
   $ui.on('mousedown touchstart', function(event) {
-    event.preventDefault();
     dragging = true;
     coords = event.touches ? getTouchCoords(this, event) : getMouseCoords(this, event);
     line.a = coords;
