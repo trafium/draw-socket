@@ -19,5 +19,9 @@ function getMouseCoords(canvas, event) {
 }
 
 function getTouchCoords(canvas, event) {
-  socket.emit('DEBUG', event);
+  var rectangle = canvas.getBoundingClientRect();
+  return {
+    x: event.touches[0].clientX - rectangle.left,
+    y: event.touches[0].clientY - rectangle.top
+  };
 }
