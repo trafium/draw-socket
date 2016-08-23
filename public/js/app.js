@@ -36,16 +36,7 @@ $(function() {
 
   // UI MOUSE EVENTS
   $ui.on('mousedown touchstart', function(event) {
-    var coords;
-    if (event.touches) {
-      coords = getTouchCoords($canvas.get(0), event);
-      if (event.touches.length > 1) {
-        return;
-      }
-    }  else {
-      event.preventDefault();
-      coords = getMouseCoords($canvas.get(0), event);
-    }
+    var coords = event.touches ? getTouchCoords(this, event) : getMouseCoords(this, event);
     dragging = true;
     line.a = coords;
   });
@@ -56,9 +47,10 @@ $(function() {
       coords = getTouchCoords($canvas.get(0), event);
       if (event.touches.length > 1) {
         return;
+      } else {
+        event.preventDefault();
       }
     }  else {
-      event.preventDefault();
       coords = getMouseCoords($canvas.get(0), event);
     }
     if (dragging) {
