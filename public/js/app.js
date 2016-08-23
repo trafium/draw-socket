@@ -48,8 +48,7 @@ $(function() {
   });
 
   $(document).on('mousemove', function(event) {
-    coords = event.touches ? 
-      getTouchCoords($canvas.get(0), event) : getMouseCoords($canvas.get(0), event);
+    coords = getMouseCoords(this, event);
     if (dragging) {
       line.b = coords;
       line.color = context.strokeStyle;
