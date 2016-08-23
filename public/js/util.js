@@ -11,9 +11,9 @@ function clearSelection() {
 }
 
 function getMouseCoords(canvas, event) {
-  var rectangle = canvas.getBoundingClientRect();
+  $canvas = $(canvas);
   return {
-    x: event.pageX - canvas.position().left,
-    y: event.pageY - canvas.position().top
+    x: event.pageX - $canvas.position().left,
+    y: event.pageY - $canvas.position().top
   };
 }
