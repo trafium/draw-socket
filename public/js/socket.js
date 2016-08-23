@@ -13,6 +13,10 @@ function initSocket() {
     drawLine(line);
   });
 
+  socket.on('DEBUG', function(data) {
+    console.log(data);
+  });
+
   socket.on('clear', function() {
     clear();
   });
