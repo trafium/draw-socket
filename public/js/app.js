@@ -41,7 +41,6 @@ $(function() {
 
   // UI MOUSE EVENTS
   $ui.on('mousedown', function(event) {
-    event.preventDefault();
     dragging = true;
     coords = getMouseCoords(this, event);
     line.a = coords;
