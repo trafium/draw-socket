@@ -12,10 +12,7 @@ function clearSelection() {
 
 function getMouseCoords(canvas, event) {
   var rectangle = canvas.getBoundingClientRect();
-  if (event.touches) {
-    event = event.touches[0];
-  }
-  socket.emit('DEBUG', [event.clientX, rectangle.left]);
+  socket.emit('DEBUG', event.touches);
   return {
     x: event.clientX - rectangle.left,
     y: event.clientY - rectangle.top
