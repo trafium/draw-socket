@@ -2,7 +2,6 @@ function initSocket() {
   socket = io.connect();
 
   socket.on('getCurrentImage', function(url) {
-    console.log('Got current image');
     // drawAsync(context, lines, 100);
     var image = new Image();
     image.src = url;
@@ -18,6 +17,7 @@ function initSocket() {
   });
 
   socket.on('requestCurrentImage', function(req) {
+    console.log('On request for ' + req.forSocket + ' made response.');
     socket.emit('responseCurrentImage', { 
       image: $canvas.get(0).toDataURL(), 
       forSocket: req.forSocket 
