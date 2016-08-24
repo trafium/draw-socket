@@ -51,6 +51,7 @@ $(function() {
       }
     }
 
+
     var coords = getCoords($canvas.get(0), event);
 
 
@@ -96,7 +97,7 @@ $(function() {
         event.preventDefault();
       }
     }
-    
+
     if (paletteDragging) {
       setColor(this, event);
     }
