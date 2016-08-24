@@ -10,18 +10,19 @@ function clearSelection() {
   }
 }
 
-function getMouseCoords(canvas, event) {
+function getCoords(canvas, event) {
   var rectangle = canvas.getBoundingClientRect();
+  var clientX;
+  var clientY;
+  if (event.touches) {
+    clientX = event.touches[0].clientX;
+    clientY = event.touches[0].clientY;
+  } else {
+    clientX = event.clientX;
+    clientY = event.clientY;
+  }
   return {
-    x: event.clientX - rectangle.left,
-    y: event.clientY - rectangle.top
-  };
-}
-
-function getTouchCoords(canvas, event) {
-  var rectangle = canvas.getBoundingClientRect();
-  return {
-    x: event.touches[0].clientX - rectangle.left,
-    y: event.touches[0].clientY - rectangle.top
-  };
+    x: clientX - rectangle.left,
+    y: clientY - rectangle.top
+  }
 }

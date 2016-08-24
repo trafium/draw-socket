@@ -36,23 +36,24 @@ $(function() {
 
   // UI MOUSE EVENTS
   $ui.on('mousedown touchstart', function(event) {
-    var coords = event.touches ? getTouchCoords(this, event) : getMouseCoords(this, event);
+    var coords = getCoords(this, event);
     dragging = true;
     line.a = coords;
   });
 
   $(document).on('mousemove touchmove', function(event) {
-    var coords;
+    // PREVENT DEFAULT IF TOUCH
     if (event.touches) {
-      coords = getTouchCoords($canvas.get(0), event);
       if (event.touches.length > 1) {
         return;
       } else {
         event.preventDefault();
       }
-    }  else {
-      coords = getMouseCoords($canvas.get(0), event);
     }
+
+    var coords = getCoords($canvas.get(0), event);
+
+
     if (dragging) {
       line.b = coords;
       line.color = context.strokeStyle;
@@ -87,6 +88,15 @@ $(function() {
   });
 
   $palette.on('mousemove touchmove', function(event) {
+    // PREVENT DEFAULT IF TOUCH
+    if (event.touches) {
+      if (event.touches.length > 1) {
+        return;
+      } else {
+        event.preventDefault();
+      }
+    }
+    
     if (paletteDragging) {
       setColor(this, event);
     }

@@ -7,7 +7,7 @@ function initColorPalette() {
 }
 
 function setColor(canvas, event) {
-  var coords = getMouseCoords(canvas, event);
+  var coords = getCoords(canvas, event);
   var imgData = paletteContext.getImageData(coords.x, coords.y, 1, 1).data;
   var color = 'rgba('+imgData[0]+','+imgData[1]+','+imgData[2]+',1)';
   $currentColor.css({'background-color': color});
