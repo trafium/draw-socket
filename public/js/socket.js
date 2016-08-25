@@ -5,7 +5,9 @@ function initSocket() {
     // drawAsync(context, lines, 100);
     var image = new Image();
     image.src = url;
-    context.drawImage(image, 0, 0);
+    image.onload = function() {
+      context.drawImage(image, 0, 0);
+    };
   });
 
   socket.on('getLine', function(line) {
@@ -14,14 +16,5 @@ function initSocket() {
 
   socket.on('clear', function() {
     clear();
-  });
-
-  socket.on('requestCurrentImage', function(req) {
-    console.log('On request for ' + req.forSocket + ' made response.');
-    socket.emit('responseCurrentImage', { 
-      image: $canvas.get(0).toDataURL(), 
-      forSocket: req.forSocket 
-    });
-
   });
 }
