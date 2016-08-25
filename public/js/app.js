@@ -107,6 +107,10 @@ $(function() {
     paletteDragging = false;
   });
 
+  $(window).on('resize', function(event) {
+    console.log('resize');
+  });
+
   initColorPalette();
   initSocket();
   

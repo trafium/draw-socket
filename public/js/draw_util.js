@@ -48,7 +48,7 @@ var drawCursor = (function() {
 function drawAsync(lines, stepNumber) {
   function draw() {
     var step = lines.splice(0, stepNumber);
-    step.forEach((line) => {
+    step.forEach(function(line) {
       drawLine(line);
     });
     if (lines.length) {
